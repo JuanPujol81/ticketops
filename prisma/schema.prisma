@@ -8,16 +8,16 @@ datasource db {
 }
 
 model Ticket {
-  id          String       @id @default(cuid())
-  title       String
+  id          String       @id @default(uuid())
+  subject     String
   description String?
-  status      TicketStatus @default(OPEN)
+  status      TicketStatus @default(NEW)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 }
 
 enum TicketStatus {
-  OPEN
+  NEW
   IN_PROGRESS
   RESOLVED
   CLOSED
