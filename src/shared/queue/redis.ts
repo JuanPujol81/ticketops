@@ -17,4 +17,9 @@ export const redisConnectionOptions = parseRedisUrl(config.REDIS_URL);
 
 export const redisConnection = new Redis(config.REDIS_URL, {
   maxRetriesPerRequest: null,
+  lazyConnect: true,
 });
+
+export const verifyRedisConnection = async (): Promise<void> => {
+  await redisConnection.ping();
+};

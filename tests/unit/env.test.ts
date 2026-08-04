@@ -8,6 +8,7 @@ describe('environment configuration', () => {
     PORT: '3000',
     DATABASE_URL: 'postgresql://ticketops:ticketops@localhost:5433/ticketops?schema=public',
     REDIS_URL: 'redis://localhost:6379',
+    JWT_SECRET: 'a-secure-test-secret-with-32-characters',
   };
 
   it('loads valid configuration', () => {
@@ -16,6 +17,9 @@ describe('environment configuration', () => {
       PORT: 3000,
       DATABASE_URL: 'postgresql://ticketops:ticketops@localhost:5433/ticketops?schema=public',
       REDIS_URL: 'redis://localhost:6379',
+      JWT_SECRET: 'a-secure-test-secret-with-32-characters',
+      JWT_EXPIRES_IN: '1h',
+      CORS_ORIGIN: '*',
     });
   });
 
