@@ -10,10 +10,10 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "outDir": "dist",
-    "rootDir": ".",
+    "rootDir": "src",
     "resolveJsonModule": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true
   },
-  "include": ["src", "tests", "vitest.config.ts", "eslint.config.js"]
+  "include": ["src"]
 }

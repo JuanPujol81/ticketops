@@ -8,12 +8,49 @@ datasource db {
 }
 
 model Ticket {
-  id          String       @id @default(uuid())
+  id          String         @id @default(uuid())
+  title       String
   subject     String
   description String?
-  status      TicketStatus @default(NEW)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  priority    TicketPriority @default(MEDIUM)
+  status      TicketStatus   @default(NEW)
+  requesterId String
+  assigneeId  String?
+  requester   User           @relation("RequestedTickets", fields: [requesterId], references: [id], onDelete: Restrict)
+  assignee    User?          @relation("AssignedTickets", fields: [assigneeId], references: [id], onDelete: SetNull)
+  events      TicketEvent[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([requesterId])
+  @@index([assigneeId])
+  @@index([status, priority])
+}
+
+model User {
+  id               String        @id @default(uuid())
+  name             String
+  email            String        @unique
+  passwordHash     String
+  role             UserRole      @default(CUSTOMER)
+  requestedTickets Ticket[]      @relation("RequestedTickets")
+  assignedTickets  Ticket[]      @relation("AssignedTickets")
+  ticketEvents     TicketEvent[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model TicketEvent {
+  id        String          @id @default(uuid())
+  type      TicketEventType
+  ticketId  String
+  actorId   String
+  metadata  Json?
+  ticket    Ticket          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  actor     User            @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  createdAt DateTime        @default(now())
+
+  @@index([ticketId, createdAt])
 }
 
 enum TicketStatus {
@@ -21,4 +58,25 @@ enum TicketStatus {
   IN_PROGRESS
   RESOLVED
   CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum UserRole {
+  CUSTOMER
+  AGENT
+  ADMIN
+}
+
+enum TicketEventType {
+  CREATED
+  UPDATED
+  STATUS_CHANGED
+  ASSIGNED
+  DELETED
 }
